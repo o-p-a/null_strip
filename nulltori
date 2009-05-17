@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# 2006/03/02 opa
+
+[ "$MYNAME" ] || export MYNAME=nulltori
+null_strip="`dirname $0`/null_strip"
+TMPFILE="\$\$\$null_strip_temp\$\$\$"
+
+deltmp()
+{
+	[ -f "$TMPFILE" ] && rm --force "$TMPFILE"
+}
+trap deltmp EXIT
+
+if [ ! "$1" ]; then
+	echo "usage: $MYNAME filename"
+	exit 100
+fi
+
+$null_strip "$1"
+touch --reference="$1" "$TMPFILE"
+mv --force "$TMPFILE" "$1"
+echo "$1"
